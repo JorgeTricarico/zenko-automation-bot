@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  zenco-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:80"
+    restart: unless-stopped
+    depends_on:
+      - zenco-backend
+
+  zenco-backend:
+    build:
+      context: ./server-bot
+      dockerfile: Dockerfile.bot
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./server-bot/.env
+    restart: unless-stopped
+    volumes:
+      # Guardamos de forma persistente los tokens de Whatsapp de Ana
+      - zenco_auth:/app/auth_info_baileys
+
+# En el futuro (Fase 5), debajo se añadirá "damian-frontend" y "damian-backend"
+# para que vivan en esta misma VPS aislados.
+
+volumes:
+  zenco_auth:
