@@ -4,11 +4,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc --outDir dist",
-    "start": "npx prisma migrate deploy && node dist/src/index.js",
-    "start:bot": "npx prisma migrate deploy && node dist/src/index.js & node dist/src/bot.js",
-    "dev": "npx tsx src/index.ts",
-    "bot": "npx tsx src/bot.ts"
+    "start": "ts-node src/index.ts & ts-node src/bot.ts",
+    "dev": "ts-node src/index.ts",
+    "bot": "ts-node src/bot.ts"
   },
   "keywords": [],
   "author": "",

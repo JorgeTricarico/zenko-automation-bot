@@ -1,0 +1,93 @@
+# =============================================================
+# ZENKO + DAMIAN — Render Blueprint (render.yaml)
+# Deployar en Render usando este archivo como Infrastructure as Code
+# Docs: https://render.com/docs/infrastructure-as-code
+# =============================================================
+
+services:
+
+  # ─────────────────────────────────────────────
+  # 1. ZENCO BACKEND — API + WhatsApp Bot
+  # ─────────────────────────────────────────────
+  - type: web
+    name: zenco-backend
+    runtime: node
+    rootDir: server-bot
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/garments
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false   # ← Lo ingresas manualmente desde Supabase
+      - key: GEMINI_API_KEY
+        sync: false   # ← Desde tu .env
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: XAI_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+
+  # ─────────────────────────────────────────────
+  # 2. ZENCO FRONTEND — Dashboard React/Vite
+  # ─────────────────────────────────────────────
+  - type: web
+    name: zenco-frontend
+    runtime: static
+    rootDir: .
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false   # ← URL pública del zenco-backend en Render
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # ─────────────────────────────────────────────
+  # 3. DAMIAN BACKEND — API + WhatsApp Bot
+  # ─────────────────────────────────────────────
+  - type: web
+    name: damian-backend
+    runtime: node
+    rootDir: damian-bot
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/appointments
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false   # ← DB separada de Zenco (Supabase #2)
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: XAI_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+
+  # ─────────────────────────────────────────────
+  # 4. DAMIAN FRONTEND — Dashboard React/Vite
+  # ─────────────────────────────────────────────
+  - type: web
+    name: damian-frontend
+    runtime: static
+    rootDir: damian-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false   # ← URL pública del damian-backend en Render
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

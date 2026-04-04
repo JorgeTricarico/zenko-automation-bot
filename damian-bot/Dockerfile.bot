@@ -1,0 +1,23 @@
+# Zenco Backend Bot (Node + Prisma)
+FROM node:20-alpine
+WORKDIR /app
+
+# Instalar OpenSSL para que Prisma ORM pueda compilar su motor interno
+RUN apk update && apk add openssl
+
+COPY package*.json ./
+RUN npm install
+
+COPY prisma ./prisma/
+# Generar Prisma Client
+RUN npx prisma generate
+
+COPY . .
+
+# Compilar TS
+RUN npx tsc || echo "Proceeding to run TS Node natively in dev mode if needed"
+
+EXPOSE 3000
+
+# En modo de Producción usaremos el start normal
+CMD ["npm", "start"]

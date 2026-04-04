@@ -1,9 +1,5 @@
 node_modules
-dist/
 # Keep environment variables out of version control
 .env
-
-# Sesión de WhatsApp (se regenera al iniciar)
-auth_info_baileys/
 
 /src/generated/prisma
