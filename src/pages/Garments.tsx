@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { fetchGarments, DBGarment } from '../services/api';
+import { useEffect, useState } from 'react';
+import { fetchGarments } from '../services/api';
+import type { DBGarment } from '../services/api';
 
 export default function Garments() {
   const [searchTerm, setSearchTerm] = useState('');

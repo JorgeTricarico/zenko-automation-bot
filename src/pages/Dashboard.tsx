@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { fetchGarments, fetchFinances, createGarment, DBGarment, DBFinance } from '../services/api';
+import { useEffect, useState } from 'react';
+import { fetchGarments, fetchFinances, createGarment } from '../services/api';
+import type { DBGarment, DBFinance } from '../services/api';
 
 export default function Dashboard() {
   const [garments, setGarments] = useState<DBGarment[]>([]);

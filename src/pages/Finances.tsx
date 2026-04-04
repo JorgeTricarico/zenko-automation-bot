@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { fetchFinances, DBFinance } from '../services/api';
+import { useEffect, useState } from 'react';
+import { fetchFinances } from '../services/api';
+import type { DBFinance } from '../services/api';
 
 export default function Finances() {
   const [finances, setFinances] = useState<DBFinance[]>([]);
