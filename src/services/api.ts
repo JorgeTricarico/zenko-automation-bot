@@ -32,3 +32,13 @@ export const fetchFinances = async (): Promise<DBFinance[]> => {
   if (!res.ok) throw new Error("Error al obtener finanzas");
   return res.json();
 };
+
+export const createGarment = async (data: Partial<DBGarment>): Promise<DBGarment> => {
+  const res = await fetch(`${API_URL}/garments`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error("Error al guardar la orden");
+  return res.json();
+};
