@@ -1,4 +1,4 @@
-// This is your Prisma schema file,
+// Schema para Masajes Damián
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
@@ -7,20 +7,20 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
-model Order {
-  id           String   @id
-  clientName   String
-  clientPhone  String
-  garmentName  String
-  repairType   String
-  description  String
-  status       String   @default("recibido")
-  deliveryDate String
-  price        Float
-  createdAt    DateTime @default(now())
+model Appointment {
+  id          String   @id
+  clientName  String
+  clientPhone String
+  service     String   // ej: "Masaje Deportivo", "Masaje Relajante"
+  duration    Int      // minutos
+  date        String
+  time        String
+  status      String   @default("pendiente") // pendiente | confirmado | cancelado | completado
+  price       Float
+  notes       String?
+  createdAt   DateTime @default(now())
 }
 
 model FinancialEntry {

@@ -11,15 +11,15 @@ const prisma = new PrismaClient();
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'MISSING_KEY');
 
 // 1. Declaración de Herramientas (Functions) para la IA
-const checkGarmentStatusDeclaration = {
-    name: "check_garment_status",
-    description: "Busca en la base de datos el estado de la prenda de un cliente buscando por coincidencia aproximada de su nombre o teléfono.",
+const checkAppointmentStatusDeclaration = {
+    name: "check_appointment_status",
+    description: "Busca en la base de datos el estado de la cita de un cliente buscando por su nombre o teléfono para confirmar fecha, hora y servicio.",
     parameters: {
       type: "OBJECT",
       properties: {
         clientQuery: {
           type: "STRING",
-          description: "Nombre o teléfono extraído del cliente para buscar su orden."
+          description: "Nombre o teléfono del cliente para buscar su turno."
         }
       },
       required: ["clientQuery"]
@@ -29,17 +29,17 @@ const checkGarmentStatusDeclaration = {
 const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
     tools: [{
-        functionDeclarations: [checkGarmentStatusDeclaration]
+        functionDeclarations: [checkAppointmentStatusDeclaration]
     }]
 });
 
 async function handleFunctionCall(callConfig: any) {
-    if (callConfig.name === "check_garment_status") {
+    if (callConfig.name === "check_appointment_status") {
         const query = callConfig.args.clientQuery as string;
-        console.log(`[IA-TOOL] Ejecutando búsqueda en BD para: "${query}"`);
+        console.log(`[💆-TOOL] Ejecutando búsqueda en BD de citas para: "${query}"`);
         
-        // Buscar en Prisma
-        const order = await prisma.order.findFirst({
+        // Buscar en Prisma Appointments
+        const appointment = await prisma.appointment.findFirst({
             where: {
                 OR: [
                     { clientName: { contains: query } },
@@ -48,23 +48,25 @@ async function handleFunctionCall(callConfig: any) {
             }
         });
 
-        if (order) {
+        if (appointment) {
             return {
                 encontrado: true,
-                prenda: order.garmentName,
-                estado: order.status,
-                fechaEntrega: order.deliveryDate,
-                arreglo: order.repairType
+                servicio: appointment.service,
+                estado: appointment.status,
+                fecha: appointment.date,
+                hora: appointment.time,
+                notas: appointment.notes
             };
         } else {
-            return { encontrado: false, mensaje: "No se encontraron órdenes para ese cliente." };
+            return { encontrado: false, mensaje: "No se encontraron citas programadas para ese nombre o teléfono." };
         }
     }
     return null;
 }
 
 async function connectToWhatsApp() {
-    const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys');
+    // Usar una carpeta separada para las credenciales de Damian
+    const { state, saveCreds } = await useMultiFileAuthState('damian_auth_info');
     
     const sock = makeWASocket({
         auth: state,
@@ -80,7 +82,7 @@ async function connectToWhatsApp() {
             const shouldReconnect = (lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut;
             if(shouldReconnect) connectToWhatsApp();
         } else if(connection === 'open') {
-            console.log('🦊 Zenco AI Bot conectado y leyendo la BD!');
+            console.log('🧘 Damian AI Bot conectado y gestionando la agenda!');
         }
     });
 
@@ -94,7 +96,7 @@ async function connectToWhatsApp() {
         const textMessage = msg.message?.conversation || msg.message?.extendedTextMessage?.text || "";
         if (!textMessage) return;
 
-        console.log(`[📞] ${msg.pushName} (${remoteJid}): ${textMessage}`);
+        console.log(`[💆] ${msg.pushName} (${remoteJid}): ${textMessage}`);
 
         try {
             await sock.readMessages([msg.key]);
@@ -105,9 +107,10 @@ async function connectToWhatsApp() {
             
             // System prompt + envio de mensaje
             let result = await chat.sendMessage(`
-                Eres Ana, dueña de Zenco (arreglos de ropa e indumentaria). Eres amable y profesional.
-                Si te preguntan por un arreglo, extrae su nombre del mensaje o usa su teléfono (${remoteJid}) 
-                para usar la función check_garment_status y responderles en base a esos datos reales.
+                Eres Damián, experto masajista profesional. Tienes un consultorio de masajes bienestar. 
+                Eres calmado, educado y servicial.
+                Ayuda a los clientes con sus dudas sobre masajes (Descontracturante, Relajante, Deportivo, Drenaje Linfático).
+                Si te preguntan por su turno o cita, usa la función check_appointment_status enviando su nombre o su teléfono (${remoteJid}).
                 
                 Mensaje del usuario: ${textMessage}
             `);
@@ -133,8 +136,8 @@ async function connectToWhatsApp() {
             await sock.sendMessage(remoteJid, { text: finalResponse });
             
         } catch (error) {
-            console.error("Error AI:", error);
-            await sock.sendMessage(remoteJid, { text: "Ups, estoy organizando el taller. 🦊 En un ratito te respondo." });
+            console.error("Error AI Damian:", error);
+            await sock.sendMessage(remoteJid, { text: "Hola, soy Damián. En este momento estoy en una sesión, te respondo apenas termine. 🙏" });
         }
     });
 }

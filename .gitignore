@@ -18,6 +18,10 @@ build/
 auth_info_baileys/
 server-bot/auth_info_baileys/
 
+# Scripts con tokens (no commitear)
+push-*.sh
+create-repos.sh
+
 # Ignorar reportes
 coverage/
 playwright-report/

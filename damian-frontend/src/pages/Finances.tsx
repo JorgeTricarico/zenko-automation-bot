@@ -30,7 +30,7 @@ export default function Finances() {
       <div className="flex-between" style={{ marginBottom: '32px' }}>
         <div>
           <h1>Control Financiero</h1>
-          <p className="subtitle">Lleva el registro de todo el capital ingresado y los gatos del taller.</p>
+          <p className="subtitle">Lleva el registro de todo el capital ingresado y los gastos del consultorio.</p>
         </div>
         <button className="btn btn-primary">+ Nuevo Registro (Gasto/Ingreso)</button>
       </div>
@@ -41,7 +41,7 @@ export default function Finances() {
           <div className="stat-value" style={{ color: 'var(--success-color)' }}>${totalIncome.toLocaleString()}</div>
         </div>
         <div className="card" style={{ borderTop: '4px solid var(--urgent-color)' }}>
-          <div className="stat-title">Gastos del Taller</div>
+          <div className="stat-title">Gastos del Consultorio</div>
           <div className="stat-value" style={{ color: 'var(--urgent-color)' }}>${totalExpenses.toLocaleString()}</div>
         </div>
         <div className="card" style={{ borderTop: '4px solid var(--primary-color)' }}>

@@ -1,37 +1,37 @@
 import { useState } from 'react';
 import Dashboard from './pages/Dashboard';
-import Garments from './pages/Garments';
+import Appointments from './pages/Appointments';
 import Finances from './pages/Finances';
+import { BUSINESS } from './config';
 import logoUrl from './assets/logo.png';
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'garments' | 'finances'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'appointments' | 'finances'>('dashboard');
 
   return (
     <div className="app-container">
-      {/* Sidebar */}
       <aside className="sidebar">
         <div className="sidebar-logo">
-          <img src={logoUrl} alt="Zenko Logo" style={{ width: 48, height: 48, borderRadius: '12px', objectFit: 'cover' }} />
-          Zenko<span>.arg</span>
+          <img src={logoUrl} alt={`${BUSINESS.name} Logo`} style={{ width: 48, height: 48, borderRadius: '12px', objectFit: 'cover' }} />
+          {BUSINESS.brandLabel}<span>{BUSINESS.brandSuffix}</span>
         </div>
-        
+
         <nav className="nav-menu">
-          <div 
+          <div
             className={`nav-link ${activeTab === 'dashboard' ? 'active' : ''}`}
             onClick={() => setActiveTab('dashboard')}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             Dashboard
           </div>
-          <div 
-            className={`nav-link ${activeTab === 'garments' ? 'active' : ''}`}
-            onClick={() => setActiveTab('garments')}
+          <div
+            className={`nav-link ${activeTab === 'appointments' ? 'active' : ''}`}
+            onClick={() => setActiveTab('appointments')}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"></path></svg>
-            Prendas y Órdenes
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Citas y Turnos
           </div>
-          <div 
+          <div
             className={`nav-link ${activeTab === 'finances' ? 'active' : ''}`}
             onClick={() => setActiveTab('finances')}
           >
@@ -41,18 +41,17 @@ function App() {
         </nav>
       </aside>
 
-      {/* Main Area */}
       <main className="main-content">
         <header className="topbar">
           <div className="user-profile">
-            Ana & Ariel
-            <div className="user-avatar">Z</div>
+            {BUSINESS.ownerName}
+            <div className="user-avatar">D</div>
           </div>
         </header>
 
         <div className="page-content">
           {activeTab === 'dashboard' && <Dashboard />}
-          {activeTab === 'garments' && <Garments />}
+          {activeTab === 'appointments' && <Appointments />}
           {activeTab === 'finances' && <Finances />}
         </div>
       </main>

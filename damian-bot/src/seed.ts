@@ -2,24 +2,56 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Iniciando sembrado (seed) de la Base de Datos SQLite...");
+  console.log("Iniciando sembrado (seed) de la Base de Datos para Damian...");
 
-  await prisma.order.createMany({
+  await prisma.appointment.createMany({
     data: [
-      { id: 'ORD-001', clientName: 'María G.', clientPhone: '11-4567-8901', garmentName: 'Campera de Cuero', repairType: 'cierre', description: 'Cambiar cierre frontal completo, metálico YKK.', status: 'en_proceso', deliveryDate: '2026-04-05', price: 15000 },
-      { id: 'ORD-002', clientName: 'Juan P.', clientPhone: '11-1234-5678', garmentName: 'Pantalón de Vestir', repairType: 'dobladillo', description: 'Hacer dobladillo, achicar 2cm de largo.', status: 'recibido', deliveryDate: '2026-04-06', price: 5000 },
-      { id: 'ORD-003', clientName: 'Sofía L.', clientPhone: '11-9876-5432', garmentName: 'Vestido de Fiesta', repairType: 'diseño', description: 'Ajustar la cintura y modificar el escote.', status: 'listo', deliveryDate: '2026-04-04', price: 35000 },
+      { 
+        id: 'APT-001', 
+        clientName: 'Roberto Gómez', 
+        clientPhone: '11-4444-5555', 
+        service: 'Masaje Descontracturante', 
+        duration: 60, 
+        date: '2026-04-10', 
+        time: '15:00', 
+        status: 'confirmado', 
+        price: 8000, 
+        notes: 'Dolor lumbar crónico.' 
+      },
+      { 
+        id: 'APT-002', 
+        clientName: 'Elena Torres', 
+        clientPhone: '11-2222-3333', 
+        service: 'Masaje Deportivo', 
+        duration: 90, 
+        date: '2026-04-12', 
+        time: '10:30', 
+        status: 'pendiente', 
+        price: 12000, 
+        notes: 'Recuperación post-maratón.' 
+      },
+      { 
+        id: 'APT-003', 
+        clientName: 'Carla Ruiz', 
+        clientPhone: '11-7777-8888', 
+        service: 'Drenaje Linfático', 
+        duration: 60, 
+        date: '2026-04-05', 
+        time: '18:00', 
+        status: 'completado', 
+        price: 9500 
+      },
     ]
   });
 
   await prisma.financialEntry.createMany({
     data: [
-      { id: 'FIN-1', date: '2026-04-01', type: 'income', category: 'Arreglos', amount: 4500, description: 'Camisa Carlos M.' },
-      { id: 'FIN-2', date: '2026-04-02', type: 'expense', category: 'Insumos', amount: 15000, description: 'Compra de Hilos y Cierres YKK' }
+      { id: 'FIN-D1', date: '2026-04-01', type: 'income', category: 'Masajes', amount: 8000, description: 'Sesión Roberto G.' },
+      { id: 'FIN-D2', date: '2026-04-02', type: 'expense', category: 'Insumos', amount: 4500, description: 'Aceites esenciales de Lavanda' }
     ]
   });
 
-  console.log("¡Sembrado completado!");
+  console.log("¡Sembrado de Damian completado!");
 }
 
 main().catch(e => {
